@@ -4,11 +4,11 @@ import re
 filename = os.path.join('TP1', 'dictionary.txt')
 with open(filename, 'r', encoding='utf-8') as file:
     regex_ion = re.compile(r'.*ion$')
-    regex_at = re.compile(r'.*at[^irt].*$|.*at$')
+    regex_at = re.compile(r'.*at([^irt].*)?$')
     list_ion = []
     list_at = []
     for line in file:
-        line = line.strip()
+        # line = line.strip()
         if regex_ion.match(line):
             list_ion.append(line)
         if regex_at.match(line):
