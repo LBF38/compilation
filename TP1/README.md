@@ -291,3 +291,7 @@ Une solution : `[+-]?\d+\.\d+([eE][+-]?[0-9]+)?`
 cf. fichier python.
 
 ## Exercice 3
+
+> **Note**
+> Si on veut voir toutes les étapes de compilation d'un fichier C, on peut utiliser la commande `gcc <fichier.c> --save-temps -o <fichier.o>`
+
