@@ -295,3 +295,11 @@ cf. fichier python.
 > **Note**
 > Si on veut voir toutes les étapes de compilation d'un fichier C, on peut utiliser la commande `gcc <fichier.c> --save-temps -o <fichier.o>`
 
+:warning: Attention pour le lexème python, il faut penser à reconnaître les tabulations (`\t`). Pour cela, on doit penser à bien avoir des tabulations dans le fichier python. :warning:
+
+## Exercice 4
+
+### Question 1
+
+> **Note**
+> <https://cyberzhg.github.io/toolbox/regex2nfa?regex=aWZ8d2hpbGV8aW5wdXR8ZnVuY3xmb3J8aW58Ym9keXxiZWdpbnxlbmR8ZW50aXR5>
