@@ -1,6 +1,13 @@
 # -*- encoding: utf-8 -*-
 
-import sys
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+class ParsingException(Exception):
+    pass
 
 
 class Parser:
@@ -14,18 +21,11 @@ class Parser:
     #      Helper Functions
     # ==========================
 
-    def error(self, message):
-        """
-        Error template.
-        """
-        print(f"ERROR at {str(self.peek().position)}: {message}")
-        sys.exit(1)
-
     def accept(self):
         """
         Pops the lexem out of the lexems list and log its tag/value combination.
         """
-        self.peek()
+        self.show_next()
         return self.lexems.pop(0)
 
     def show_next(self, n=1):
@@ -35,23 +35,25 @@ class Parser:
         try:
             return self.lexems[n - 1]
         except IndexError:
-            self.error("No more lexems left.")
+            raise ParsingException("No more lexems left.")
 
     def expect(self, tag):
         """
         Pops the next token from the lexems list and tests its type through the tag.
         """
-        next_lexem = self.peek()
-        if next_lexem.tag == tag:
-            return self.consume()
-        else:
-            self.error(f"Expected {tag}, got {next_lexem.tag} instead")
+        next_lexem = self.show_next()
+        if next_lexem.tag != tag:
+            raise ParsingException(
+                f"ERROR at {str(self.show_next().position)}: Expected {tag}, got {next_lexem.tag} instead"
+            )
+        return self.accept()
 
     def remove_comments(self):
         """
         Removes the comments from the token list by testing their tags.
         """
-        self.lexems = [lexem for lexem in self.lexems if lexem.tag != "COMMENT"]
+        self.lexems = [
+            lexem for lexem in self.lexems if lexem.tag != "COMMENT"]
 
     # ==========================
     #     Parsing Functions
@@ -61,8 +63,12 @@ class Parser:
         """
         Main function: launches the parsing operation given a lexem list.
         """
-        self.remove_comments()
-        self.parse_program()
+        try:
+            self.remove_comments()
+            self.parse_program()
+        except ParsingException as err:
+            logger.exception(err)
+            raise
 
     def parse_program(self):
         """
@@ -73,13 +79,122 @@ class Parser:
         self.expect("L_PAREN")
         self.expect("R_PAREN")
         self.expect("L_CURL_BRACKET")
-        # Your code here!
+        while(self.show_next().tag in ["TYPE_INT", "TYPE_FLOAT", "TYPE_CHAR", "TYPE_BOOL"]):
+            self.parse_declaration()
+        while(self.show_next().tag in ["IDENTIFIER", "KW_IF", "KW_WHILE"]):
+            self.parse_statement()
         self.expect("R_CURL_BRACKET")
 
-    def parse_assignment(self):
-        ...
-
     def parse_declaration(self):
-        ...
+        self.parse_type()
+        self.expect("IDENTIFIER")
+        if(self.show_next().tag == "L_BRACKET"):
+            self.expect("L_BRACKET")
+            self.expect("LIT_INT")
+            self.expect("R_BRACKET")
+        self.expect("SEMICOLON")
 
-    ...
+    def parse_type(self):
+        types = ["TYPE_BOOL", "TYPE_INT", "TYPE_FLOAT", "TYPE_CHAR"]
+        for type in types:
+            try:
+                return self.expect(type)
+            except ParsingException:
+                pass
+        raise ParsingException(
+            f"ERROR at {self.show_next().position}: Expected {types}, got {self.show_next().tag} instead")
+
+    def parse_statement(self):
+        if(self.show_next().tag == "IDENTIFIER"):
+            self.parse_assignment()
+        elif(self.show_next().tag == "KW_IF"):
+            self.parse_if_statement()
+        elif(self.show_next().tag == "KW_WHILE"):
+            self.parse_while_statement()
+
+    def parse_assignment(self):
+        self.expect("IDENTIFIER")
+        if (self.show_next().tag == "L_BRACKET"):
+            self.expect("L_BRACKET")
+            self.parse_expression()
+            self.expect("R_BRACKET")
+        self.expect("OP_ASSIGN")
+        self.parse_expression()
+        self.expect("SEMICOLON")
+
+    def parse_if_statement(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_else_statement(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_while_statement(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_expression(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_conjunction(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_equop(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_equality(self):
+        if(self.show_next().tag != "IDENTIFIER"):
+            raise ParsingException(
+                "Expected IDENTIFIER, got {next_lexem.tag} instead")
+        self.parse_relation()
+
+    def parse_relation(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_relop(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_addition(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_addop(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_term(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_mulop(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_factor(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_unaryop(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_primary(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_parenth(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
+
+    def parse_identifier(self):
+        self.expect("IDENTIFIER")
+
+    def parse_literal(self):
+        # TODO: Implement
+        raise Exception("This is unimplemented")
