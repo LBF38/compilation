@@ -1,7 +1,7 @@
 int main()
 {
     int number;
-    bool boolean = false;
+    bool boolean;
     float float_number;
     char character;
 
