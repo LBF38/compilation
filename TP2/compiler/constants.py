@@ -38,8 +38,8 @@ LEXEM_REGEXES = [
     # Literals
     (r"[0-9]+\.[0-9]+", "LIT_FLOAT"),
     (r"[0-9]+", "LIT_INT"),
-    (r"\'[a-zA-Z0-9]\'", "LIT_CHAR"),
-    (r"\"[a-zA-Z0-9]\"", "LIT_CHAR"),
+    (r"\'[a-zA-Z0-9]+\'", "LIT_CHAR"),
+    (r"\"[a-zA-Z0-9]+\"", "LIT_CHAR"),
     (r"\btrue\b", "LIT_TRUE"),
     (r"\bfalse\b", "LIT_FALSE"),
     # Identifiers

@@ -123,78 +123,150 @@ class Parser:
         self.expect("SEMICOLON")
 
     def parse_if_statement(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        self.expect("KW_IF")
+        self.expect("L_PAREN")
+        self.parse_expression()
+        self.expect("R_PAREN")
+        self.expect("L_CURL_BRACKET")
+        while (self.show_next().tag in ["IDENTIFIER", "KW_IF", "KW_WHILE"]):
+            self.parse_statement()
+        self.expect("R_CURL_BRACKET")
+        if (self.show_next().tag == "KW_ELSE"):
+            self.parse_else_statement()
 
     def parse_else_statement(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        self.expect("KW_ELSE")
+        self.expect("L_CURL_BRACKET")
+        while (self.show_next().tag in ["IDENTIFIER", "KW_IF", "KW_WHILE"]):
+            self.parse_statement()
+        self.expect("R_CURL_BRACKET")
 
     def parse_while_statement(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        self.expect("KW_WHILE")
+        self.expect("L_PAREN")
+        self.parse_expression()
+        self.expect("R_PAREN")
+        self.expect("L_CURL_BRACKET")
+        while (self.show_next().tag in ["IDENTIFIER", "KW_IF", "KW_WHILE"]):
+            self.parse_statement()
+        self.expect("R_CURL_BRACKET")
 
     def parse_expression(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        self.parse_conjunction()
+        while(self.show_next().tag == "OP_OR"):
+            self.parse_conjunction()
 
     def parse_conjunction(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        self.parse_equality()
+        while(self.show_next().tag == "OP_AND"):
+            self.parse_equality()
 
     def parse_equop(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        if(self.show_next().tag == "OP_EQ"):
+            self.expect("OP_EQ")
+        elif(self.show_next().tag == "OP_NEQ"):
+            self.expect("OP_NEQ")
+        else:
+            raise ParsingException(
+                f"ERROR at {self.show_next().position}: Expected OP_EQUAL or OP_NOT_EQUAL, got {self.show_next().tag} instead")
 
     def parse_equality(self):
-        if(self.show_next().tag != "IDENTIFIER"):
-            raise ParsingException(
-                "Expected IDENTIFIER, got {next_lexem.tag} instead")
         self.parse_relation()
+        if(self.show_next().tag in ["OP_EQUAL", "OP_NOT_EQUAL"]):
+            self.parse_equop()
+            self.parse_relation()
 
     def parse_relation(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        self.parse_addition()
+        if(self.show_next().tag in ["OP_LESS", "OP_GREATER", "OP_LESS_EQUAL", "OP_GREATER_EQUAL"]):
+            self.parse_relop()
+            self.parse_addition()
 
     def parse_relop(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        if(self.show_next().tag == "OP_LESS"):
+            self.expect("OP_LESS")
+        elif(self.show_next().tag == "OP_GREATER"):
+            self.expect("OP_GREATER")
+        elif(self.show_next().tag == "OP_LESS_EQUAL"):
+            self.expect("OP_LESS_EQUAL")
+        elif(self.show_next().tag == "OP_GREATER_EQUAL"):
+            self.expect("OP_GREATER_EQUAL")
+        else:
+            raise ParsingException(
+                f"ERROR at {self.show_next().position}: Expected OP_LESS, OP_GREATER, OP_LESS_EQUAL or OP_GREATER_EQUAL, got {self.show_next().tag} instead")
 
     def parse_addition(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        self.parse_term()
+        while (self.show_next().tag in ["OP_PLUS", "OP_MINUS"]):
+            self.parse_addop()
+            self.parse_addition()
 
     def parse_addop(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        if(self.show_next().tag == "OP_PLUS"):
+            self.expect("OP_PLUS")
+        elif(self.show_next().tag == "OP_MINUS"):
+            self.expect("OP_MINUS")
+        else:
+            raise ParsingException(
+                f"ERROR at {self.show_next().position}: Expected OP_PLUS or OP_MINUS, got {self.show_next().tag} instead")
 
     def parse_term(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        self.parse_factor()
+        while(self.show_next().tag in ["OP_MULT", "OP_DIV", "OP_MOD"]):
+            self.parse_mulop()
+            self.parse_factor()
 
     def parse_mulop(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        if(self.show_next().tag == "OP_MULT"):
+            self.expect("OP_MULT")
+        elif(self.show_next().tag == "OP_DIV"):
+            self.expect("OP_DIV")
+        elif(self.show_next().tag == "OP_MOD"):
+            self.expect("OP_MOD")
+        else:
+            raise ParsingException(
+                f"ERROR at {self.show_next().position}: Expected OP_MULT, OP_DIV or OP_MOD, got {self.show_next().tag} instead")
 
     def parse_factor(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        if(self.show_next().tag in ["OP_MINUS", "OP_NOT"]):
+            self.parse_unaryop()
+        self.parse_primary()
 
     def parse_unaryop(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        if(self.show_next().tag == "OP_MINUS"):
+            self.expect("OP_MINUS")
+        elif(self.show_next().tag == "OP_NOT"):
+            self.expect("OP_NOT")
+        else:
+            raise ParsingException(
+                f"ERROR at {self.show_next().position}: Expected OP_MINUS or OP_NOT, got {self.show_next().tag} instead")
 
     def parse_primary(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        if(self.show_next().tag == "IDENTIFIER"):
+            self.expect("IDENTIFIER")
+            if(self.show_next().tag == "L_BRACKET"):
+                self.expect("L_BRACKET")
+                self.parse_expression()
+                self.expect("R_BRACKET")
+        elif(self.show_next().tag in ["LIT_INT", "LIT_FLOAT", "LIT_CHAR", "LIT_TRUE", "LIT_FALSE"]):
+            self.parse_literal()
 
     def parse_parenth(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
-
-    def parse_identifier(self):
-        self.expect("IDENTIFIER")
+        self.expect("L_PAREN")
+        self.parse_expression()
+        self.expect("R_PAREN")
 
     def parse_literal(self):
-        # TODO: Implement
-        raise Exception("This is unimplemented")
+        if(self.show_next().tag == "LIT_INT"):
+            self.expect("LIT_INT")
+        elif(self.show_next().tag == "LIT_FLOAT"):
+            self.expect("LIT_FLOAT")
+        elif(self.show_next().tag == "LIT_CHAR"):
+            self.expect("LIT_CHAR")
+        elif(self.show_next().tag == "LIT_TRUE"):
+            self.expect("LIT_TRUE")
+        elif(self.show_next().tag == "LIT_FALSE"):
+            self.expect("LIT_FALSE")
+        else:
+            raise ParsingException(
+                f"ERROR at {self.show_next().position}: Expected LIT_INT, LIT_FLOAT, LIT_CHAR, LIT_TRUE or LIT_FALSE, got {self.show_next().tag} instead")
