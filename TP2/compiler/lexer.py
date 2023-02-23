@@ -1,8 +1,15 @@
 # -*- encoding: utf-8 -*-
 
 import re
-import sys
 from compiler.constants import LEXEM_REGEXES
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+class LexerException(Exception):
+    pass
 
 
 class Lexem:
@@ -54,7 +61,11 @@ class Lexer:
                 line_nb + 1
             )  # Python starts at 0, we need to start at 1
             line = line.strip()
-            self.match_line(line)
+            try:
+                self.match_line(line)
+            except LexerException as err:
+                logger.exception(err)
+                raise
         return self.lexems
 
     def match_line(self, line):
@@ -72,7 +83,13 @@ class Lexer:
             # If all regexes were tested and none matched,
             # raise an error!
             if not match:
-                self.error(line)
+                raise LexerException(
+                    f"ERROR (lexer) at: ({self.current_line_number},{self.current_position}):\n"
+                    + line.strip() + "\n"
+                    + " " * len(line[: self.current_position])
+                    + "^" * len(line[self.current_position - 1:])
+                    + f"\nLexems: {self.lexems}"
+                )
 
     def match_lexem(self, line, lexem_regex):
         """
@@ -97,26 +114,6 @@ class Lexer:
         """
         Creates and adds a new lexem to the list
         """
-        lexem = Lexem(tag, data, [self.current_line_number, self.current_position])
+        lexem = Lexem(
+            tag, data, [self.current_line_number, self.current_position])
         self.lexems.append(lexem)
-
-    # ==========================
-    #      Helper Functions
-    # ==========================
-
-    def error(self, line):
-        """
-        Prints the error output: error position, the line with
-        the position underlined and the lexems obtained so far
-        """
-        print(
-            f"ERROR (lexer) at: ({self.current_line_number},{self.current_position}):"
-        )
-        line = line.strip()
-        print(line)
-        print(
-            " " * len(line[: self.current_position])
-            + "^" * len(line[self.current_position - 1 :])
-        )
-        print(f"Lexems: {self.lexems}")
-        sys.exit(1)

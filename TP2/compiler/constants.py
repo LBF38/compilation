@@ -11,14 +11,14 @@ LEXEM_REGEXES = [
     (r"\]", "R_SQUARE_BRACKET"),
     (r";", "SEMICOLON"),
     # Keywords
-    (r"int", "TYPE_INT"),
-    (r"main", "KW_MAIN"),
-    (r"if", "KW_IF"),
-    (r"else", "KW_ELSE"),
-    (r"while", "KW_WHILE"),
-    (r"bool", "TYPE_BOOL"),
-    (r"float", "TYPE_FLOAT"),
-    (r"char", "TYPE_CHAR"),
+    (r"\bmain\b", "KW_MAIN"),
+    (r"\bif\b", "KW_IF"),
+    (r"\belse\b", "KW_ELSE"),
+    (r"\bwhile\b", "KW_WHILE"),
+    (r"\bint\b", "TYPE_INT"),
+    (r"\bbool\b", "TYPE_BOOL"),
+    (r"\bfloat\b", "TYPE_FLOAT"),
+    (r"\bchar\b", "TYPE_CHAR"),
     # Operators
     (r"\+", "OP_PLUS"),
     (r"\-", "OP_MINUS"),
@@ -40,8 +40,8 @@ LEXEM_REGEXES = [
     (r"[0-9]+", "LIT_INT"),
     (r"\'[a-zA-Z0-9]\'", "LIT_CHAR"),
     (r"\"[a-zA-Z0-9]\"", "LIT_CHAR"),
-    (r"true", "LIT_TRUE"),
-    (r"false", "LIT_FALSE"),
+    (r"\btrue\b", "LIT_TRUE"),
+    (r"\bfalse\b", "LIT_FALSE"),
     # Identifiers
     (r"[a-zA-Z_][a-zA-Z0-9_]*", "IDENTIFIER")
 ]

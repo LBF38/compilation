@@ -14,6 +14,7 @@ def test_lex_one_lexem(string, expected):
     assert len(lexems) == 1
     assert lexems[0].tag == expected
 
+@pytest.mark.parametrize("test_program", ["example1.c", "example2.c", "example3.c", "example4.c", "example5.c"])
 def test_lex_complete(test_program):
     lexer = Lexer()
-    lexer.lex_file(os.path.join(os.getcwd(),"TP2/examples/" + test_program))
+    lexer.lex_file(os.path.join(os.getcwd(), "TP2/examples/" + test_program))
