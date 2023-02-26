@@ -1,16 +1,78 @@
 
 import re
 import sys
+import os
 
 regexExpressions = [
     # Whitespace
-    (r'[ \n\t]+', None),
+    (r'[ \n]+', None),
 
-    # Example
+    # Keywords
+    (r'import', 'KW_IMPORT'),
+    (r'from', 'KW_FROM'),
+    (r'as', 'KW_AS'),
+    (r'class', 'KW_CLASS'),
+    (r'self', 'KW_SELF'),
+    (r'__init__', 'KW_INIT'),
+    (r'__name__', 'KW_NAME'),
+    (r'__main__', 'KW_MAIN'),
+    (r'__str__', 'KW_STR'),
+    (r'def', 'KW_DEF'),
+    (r'if', 'KW_IF'),
+    (r'elif', 'KW_ELIF'),
+    (r'else', 'KW_ELSE'),
+    (r'for', 'KW_FOR'),
+    (r'in', 'KW_IN'),
+    (r'while', 'KW_WHILE'),
+    (r'break', 'KW_BREAK'),
+    (r'continue', 'KW_CONTINUE'),
+    (r'return', 'KW_RETURN'),
+    (r'pass', 'KW_PASS'),
+    (r'and', 'KW_AND'),
+    (r'or', 'KW_OR'),
+    (r'not', 'KW_NOT'),
+    (r'is', 'KW_IS'),
+    (r'None', 'KW_NONE'),
+    (r'True', 'KW_TRUE'),
+    (r'False', 'KW_FALSE'),
+    (r'print', 'KW_PRINT'),
+    (r'\t', 'KW_TAB'),
+    
+
+    # Operators
+    (r'\+', 'PLUS'),
+    (r'\-', 'MINUS'),
+    (r'\*', 'MULT'),
+    (r'\/', 'DIV'),
+    (r'\(', 'LPAREN'),
+    (r'\)', 'RPAREN'),
+    (r'\.', 'DOT'),
+    (r'\,', 'COMMA'),
+    (r'\:', 'COLON'),
+    (r'\;', 'SEMICOLON'),
+    (r'\{', 'LBRACE'),
+    (r'\}', 'RBRACE'),
+    (r'\[', 'LBRACKET'),
+    (r'\]', 'RBRACKET'),
+    (r'\<', 'LT'),
+    (r'\>', 'GT'),
+    (r'\<\=', 'LTE'),
+    (r'\>\=', 'GTE'),
+    (r'\=\=', 'EQ'),
     (r'\=', 'ASSIGN'),
+    (r'\!\=', 'NEQ'),
+    (r'\!', 'NOT'),
+    (r'\&\&', 'AND'),
+    (r'\|\|', 'OR'),
+    # (r'\"', 'QUOTE'),
+    
+    # Literals
+    (r'\".*\"', 'STRING'),
+    (r'\d+\.\d+', 'FLOAT'),
+    (r'\d+', 'INTEGER'),
 
-    # TODO: Add the other regexes for your lexems
-    # ...
+    # Identifiers
+    (r'[a-zA-Z][a-zA-Z0-9_]+', 'IDENTIFIER'),
 ]
 
 
@@ -27,9 +89,10 @@ class Lexem:
     position: integer tuple
         Tuple to point out the lexem in the input file (line number, position)
     '''
+
     def __init__(self, tag=None, value=None, position=None):
-        self.tag      = tag
-        self.value    = value
+        self.tag = tag
+        self.value = value
         self.position = position
 
     def __repr__(self):
@@ -81,3 +144,16 @@ class Lexer:
                     sys.exit(1)
 
         return self.lexems
+
+
+if __name__ == "__main__":
+    # Test the lexer
+    lexer = Lexer()
+    filenames = ["pythoncode.py"]
+    for filename in filenames:
+        filename = os.path.join(os.path.dirname(__file__), filename)
+        with open(filename, "r") as f:
+            inputText = f.readlines()
+            lexer.lex(inputText)
+            print("Lexems for file", filename)
+            print(lexer.lexems)
