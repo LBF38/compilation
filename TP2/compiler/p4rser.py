@@ -162,10 +162,10 @@ class Parser:
             self.parse_equality()
 
     def parse_equop(self):
-        if(self.show_next().tag == "OP_EQ"):
-            self.expect("OP_EQ")
-        elif(self.show_next().tag == "OP_NEQ"):
-            self.expect("OP_NEQ")
+        if(self.show_next().tag == "OP_EQUAL"):
+            self.expect("OP_EQUAL")
+        elif(self.show_next().tag == "OP_NEQUAL"):
+            self.expect("OP_NEQUAL")
         else:
             raise ParsingException(
                 f"ERROR at {self.show_next().position}: Expected OP_EQUAL or OP_NOT_EQUAL, got {self.show_next().tag} instead")
