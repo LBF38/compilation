@@ -1,6 +1,7 @@
 int main()
 {
-    int a = 5;
+    int a;
+    a = 5;
     while (true)
     {
         if (a == 0)
