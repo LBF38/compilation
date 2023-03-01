@@ -2,7 +2,8 @@
     "conventionalCommits.scopes": [
         "TP2",
         "TP1",
-        "merge"
+        "merge",
+        "TP3"
     ],
     "python.testing.pytestArgs": [
         "TP2"
