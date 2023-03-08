@@ -6,7 +6,7 @@
         "TP3"
     ],
     "python.testing.pytestArgs": [
-        "TP2"
+        "."
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true
