@@ -3,6 +3,8 @@
 
 import logging
 
+from compiler.abstract_syntax import (AstNode,Program,Declaration,Assignement,Body,Identifier,If,Else,While,Conjunction)
+
 logger = logging.getLogger(__name__)
 
 
@@ -16,6 +18,7 @@ class Parser:
         Component in charge of syntaxic analysis.
         """
         self.lexems = lexems
+        self.ast_root = AstNode()
 
     # ==========================
     #      Helper Functions
@@ -65,34 +68,42 @@ class Parser:
         """
         try:
             self.remove_comments()
-            self.parse_program()
+            program = self.parse_program()
         except ParsingException as err:
             logger.exception(err)
             raise
+        return program
 
     def parse_program(self):
         """
         Parses a program which is a succession of assignments.
         """
+        declarations_list = []
+        statements_list = []
         self.expect("TYPE_INT")
         self.expect("KW_MAIN")
         self.expect("L_PAREN")
         self.expect("R_PAREN")
         self.expect("L_CURL_BRACKET")
         while(self.show_next().tag in ["TYPE_INT", "TYPE_FLOAT", "TYPE_CHAR", "TYPE_BOOL"]):
-            self.parse_declaration()
+            declaration = self.parse_declaration()
+            declarations_list.append(declaration)
         while(self.show_next().tag in ["IDENTIFIER", "KW_IF", "KW_WHILE"]):
-            self.parse_statement()
+            statement = self.parse_statement()
+            statements_list.append(statement)
         self.expect("R_CURL_BRACKET")
+        return Program(declarations_list, statements_list)
 
     def parse_declaration(self):
-        self.parse_type()
-        self.expect("IDENTIFIER")
+        type = self.parse_type()
+        identifier = Identifier(self.expect("IDENTIFIER"))
+        integer = None
         if(self.show_next().tag == "L_BRACKET"):
             self.expect("L_BRACKET")
-            self.expect("LIT_INT")
+            integer = self.expect("LIT_INT")
             self.expect("R_BRACKET")
         self.expect("SEMICOLON")
+        return Declaration(type, identifier, integer)
 
     def parse_type(self):
         types = ["TYPE_BOOL", "TYPE_INT", "TYPE_FLOAT", "TYPE_CHAR"]
@@ -106,50 +117,64 @@ class Parser:
 
     def parse_statement(self):
         if(self.show_next().tag == "IDENTIFIER"):
-            self.parse_assignment()
+            return self.parse_assignment()
         elif(self.show_next().tag == "KW_IF"):
-            self.parse_if_statement()
+            return self.parse_if_statement()
         elif(self.show_next().tag == "KW_WHILE"):
-            self.parse_while_statement()
+            return self.parse_while_statement()
+        raise ParsingException(
+            f"ERROR at {self.show_next().position}: Expected a statement, got {self.show_next().tag} instead")
 
     def parse_assignment(self):
-        self.expect("IDENTIFIER")
+        identifier = self.expect("IDENTIFIER")
+        table_expression = None
         if (self.show_next().tag == "L_BRACKET"):
             self.expect("L_BRACKET")
-            self.parse_expression()
+            table_expression = self.parse_expression()
             self.expect("R_BRACKET")
         self.expect("OP_ASSIGN")
-        self.parse_expression()
+        expression = self.parse_expression()
         self.expect("SEMICOLON")
+        return Assignement(identifier, table_expression, expression)
 
     def parse_if_statement(self):
         self.expect("KW_IF")
         self.expect("L_PAREN")
-        self.parse_expression()
+        condition = self.parse_expression()
         self.expect("R_PAREN")
         self.expect("L_CURL_BRACKET")
+        body = Body([])
         while (self.show_next().tag in ["IDENTIFIER", "KW_IF", "KW_WHILE"]):
-            self.parse_statement()
+            statement = self.parse_statement()
+            body.statements.append(statement)
         self.expect("R_CURL_BRACKET")
+        else_= None
         if (self.show_next().tag == "KW_ELSE"):
-            self.parse_else_statement()
+            else_ = self.parse_else_statement()
+        return If(condition, body, else_)
 
     def parse_else_statement(self):
         self.expect("KW_ELSE")
         self.expect("L_CURL_BRACKET")
+        body = Body([])
         while (self.show_next().tag in ["IDENTIFIER", "KW_IF", "KW_WHILE"]):
-            self.parse_statement()
+            statement = self.parse_statement()
+            body.statements.append(statement)
         self.expect("R_CURL_BRACKET")
+        return Else(body)
 
     def parse_while_statement(self):
         self.expect("KW_WHILE")
         self.expect("L_PAREN")
-        self.parse_expression()
+        condition = self.parse_expression()
         self.expect("R_PAREN")
         self.expect("L_CURL_BRACKET")
+        body = Body([])
         while (self.show_next().tag in ["IDENTIFIER", "KW_IF", "KW_WHILE"]):
-            self.parse_statement()
+            statement = self.parse_statement()
+            body.statements.append(statement)
         self.expect("R_CURL_BRACKET")
+        return While(condition, body)
 
     def parse_expression(self):
         self.parse_conjunction()
@@ -157,7 +182,7 @@ class Parser:
             self.parse_conjunction()
 
     def parse_conjunction(self):
-        self.parse_equality()
+        conjunction = Conjunction(self.parse_equality())
         while(self.show_next().tag == "OP_AND"):
             self.parse_equality()
 

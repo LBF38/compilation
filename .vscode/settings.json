@@ -2,11 +2,13 @@
     "conventionalCommits.scopes": [
         "TP2",
         "TP1",
-        "merge"
+        "merge",
+        "TP3"
     ],
     "python.testing.pytestArgs": [
-        "TP2"
+        "."
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "python.analysis.typeCheckingMode": "basic"
 }
