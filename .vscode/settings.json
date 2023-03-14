@@ -3,7 +3,8 @@
         "TP2",
         "TP1",
         "merge",
-        "TP3"
+        "TP3",
+        "TP4"
     ],
     "python.testing.pytestArgs": [
         "."
