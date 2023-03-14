@@ -1,9 +1,3 @@
-
-class AST:
-    def __init__(self) -> None:
-        self.tree: list(AstNode)
-
-
 class AstNode:
     def accept(self, visitor, args=None):
         name = self.__class__.__name__
