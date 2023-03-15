@@ -1,7 +1,9 @@
 import os
-from TP2.compiler.abstract_syntax import *
-from TP2.compiler.p4rser import *
-from TP2.compiler.lexer import *
+
+from TP2.compiler.abstract_syntax import (
+    Body, Declaration, Else, Expression, Program)
+from TP2.compiler.lexer import Lexer
+from TP2.compiler.p4rser import Parser
 
 
 class VisitorMiniC:
@@ -16,9 +18,16 @@ class VisitorMiniC:
             self.visit(statement)
 
     def visitDeclaration(self, declaration: Declaration, args):
-        self.visit(declaration.type)
-        self.visit(declaration.identifier)
-        # ...
+        print(
+            f"Declaration: {declaration.type} {declaration.identifier} {declaration.integer};")
+
+    def visitAssignement(self, identifier, table_expression, expression):
+        print(f"{identifier} {table_expression} = {expression};")
+
+    def visitIf(self, condition: Expression, body: Body, else_: Else):
+        self.visit(condition)
+        self.visit(body)
+        self.visit(else_)
 
     # TODO: implement the rest of the visit methods to make a simple visitor
 
