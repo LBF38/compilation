@@ -1,9 +1,9 @@
 import os
 
-from TP2.compiler.abstract_syntax import (
+from compiler.abstract_syntax import (
     Body, Declaration, Else, Expression, Program)
-from TP2.compiler.lexer import Lexer
-from TP2.compiler.p4rser import Parser
+from compiler.lexer import Lexer
+from compiler.p4rser import Parser
 
 
 class VisitorMiniC:
@@ -35,8 +35,9 @@ class VisitorMiniC:
 if __name__ == '__main__':
     lexer = Lexer()
     lexems = lexer.lex_file(os.path.join(
-        os.getcwd(), "TP2/examples/example1.c"))
+        os.getcwd(), "examples/example1.c"))
     parser = Parser(lexems)
     program = parser.parse()
     visitor = VisitorMiniC()
     program.accept(visitor)
+    print("test")

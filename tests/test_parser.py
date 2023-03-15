@@ -12,7 +12,7 @@ from compiler.p4rser import Parser
 
 def test_parse_complete(test_program):
     lexer = Lexer()
-    lexems = lexer.lex_file(os.path.join(os.getcwd(),"TP2/examples/" + test_program))
+    lexems = lexer.lex_file(os.path.join(os.getcwd(),"examples/" + test_program))
     print(lexems)
     parser = Parser(lexems)
     parser.parse()

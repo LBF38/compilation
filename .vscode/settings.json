@@ -4,7 +4,8 @@
         "TP1",
         "merge",
         "TP3",
-        "TP4"
+        "TP4",
+        "compiler"
     ],
     "python.testing.pytestArgs": [
         "."
