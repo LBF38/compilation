@@ -5,7 +5,8 @@
         "merge",
         "TP3",
         "TP4",
-        "compiler"
+        "compiler",
+        "TP5"
     ],
     "python.testing.pytestArgs": [
         "."
