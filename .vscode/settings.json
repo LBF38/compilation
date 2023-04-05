@@ -6,7 +6,8 @@
         "TP3",
         "TP4",
         "compiler",
-        "TP5"
+        "TP5",
+        "compiler-project"
     ],
     "python.testing.pytestArgs": [
         "."
