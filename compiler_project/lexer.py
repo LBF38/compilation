@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+import os
 import re
 from compiler_project.rules import LEXEM_RULES
 
@@ -118,3 +119,8 @@ class Lexer:
         lexem = Lexem(
             tag, data, [self.current_line_number, self.current_position])
         self.lexems.append(lexem)
+
+if __name__ == "__main__":
+    lexer = Lexer()
+    lexer.lex_file(os.path.join(os.path.dirname(__file__), "fixtures", "types.dart"))
+    print(lexer.lexems)
