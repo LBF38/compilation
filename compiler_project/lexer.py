@@ -122,5 +122,5 @@ class Lexer:
 
 if __name__ == "__main__":
     lexer = Lexer()
-    lexer.lex_file(os.path.join(os.path.dirname(__file__), "fixtures", "types.dart"))
+    lexer.lex_file(os.path.join(os.path.dirname(__file__), "fixtures", "class.dart"))
     print(lexer.lexems)

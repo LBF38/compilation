@@ -11,6 +11,7 @@ LEXEM_RULES = [
     (r"\[", "L_SQUARE_BRACKET"),
     (r"\]", "R_SQUARE_BRACKET"),
     (r";", "SEMICOLON"),
+    (r",", "COMMA"),
 
     # Keywords
     (r"\bmain\b", "KW_MAIN"),
@@ -23,6 +24,7 @@ LEXEM_RULES = [
     (r"\bclass\b", "KW_CLASS"),
     (r"\btypedef\b", "KW_TYPEDEF"),
     (r"\bfinal\b", "KW_FINAL"),
+    (r"\bthis\b", "KW_THIS"),
     # Types
     (r"\bint\b", "TYPE_INT"),
     (r"\bdouble\b", "TYPE_DOUBLE"),
@@ -49,6 +51,7 @@ LEXEM_RULES = [
     (r"\>", "OP_GREATER"),
     (r"\<", "OP_LESS"),
     (r"\=", "OP_ASSIGN"),
+    (r"\.", "OP_DOT"),
 
     # Literals
     (r"[0-9]+\.[0-9]+", "LIT_FLOAT"),
