@@ -7,6 +7,7 @@ from compiler_project.abstract_syntax import (
     AstNode,
     Class,
     Field,
+    Identifier,
     Method,
     Parameter,
     TypeNode,
@@ -115,7 +116,7 @@ class Parser:
         # TODO: separate the different steps of the parsing process
         # (class, constructor, fields, methods, etc.)
         self.expect(Keyword_ruleset.CLASS)
-        class_name = self.expect(Identifier_ruleset.IDENTIFIER)
+        class_name = self.parse_identifier()
         self.expect(Ponctuation_ruleset.L_CURL_BRACKET)
         methods: list[Method] = []
         fields: list[Field] = []
@@ -128,7 +129,7 @@ class Parser:
                     else:
                         fields.append(self.parse_field())
             if self.show_next().tag == Identifier_ruleset.IDENTIFIER:
-                identifier = self.expect(Identifier_ruleset.IDENTIFIER)
+                identifier = self.parse_identifier()
                 if identifier.value != class_name.value:
                     raise ParsingException("ERROR: Expected class name")
                 self.expect(Ponctuation_ruleset.L_PAREN)
@@ -136,24 +137,20 @@ class Parser:
                 if self.show_next().tag == Keyword_ruleset.THIS:
                     self.expect(Keyword_ruleset.THIS)
                     self.expect(Operator_ruleset.DOT)
-                    constructor_params.append(
-                        self.expect(Identifier_ruleset.IDENTIFIER)
-                    )
+                    constructor_params.append(self.parse_identifier())
                 while self.show_next().tag == Ponctuation_ruleset.COMMA:
                     self.expect(Ponctuation_ruleset.COMMA)
                     self.expect(Keyword_ruleset.THIS)
                     self.expect(Operator_ruleset.DOT)
-                    constructor_params.append(
-                        self.expect(Identifier_ruleset.IDENTIFIER)
-                    )
+                    constructor_params.append(self.parse_identifier())
                 self.expect(Ponctuation_ruleset.R_PAREN)
                 self.expect(Ponctuation_ruleset.SEMICOLON)
         self.expect(Ponctuation_ruleset.R_CURL_BRACKET)
-        return Class(class_name.value, fields, methods)
+        return Class(class_name, fields, methods)
 
     def parse_method(self) -> Method:
         method_type = self.parse_type()
-        method_name = self.expect(Identifier_ruleset.IDENTIFIER)
+        method_name = self.parse_identifier()
         self.expect(Ponctuation_ruleset.L_PAREN)
         # parse parameters
         parameters = self.parse_parameters()
@@ -164,9 +161,12 @@ class Parser:
         self.expect(Ponctuation_ruleset.R_CURL_BRACKET)
         return Method(method_name, method_type, parameters, method_body)
 
+    def parse_identifier(self):
+        return Identifier(self.expect(Identifier_ruleset.IDENTIFIER).value)
+
     def parse_field(self) -> Field:
         field_type = self.parse_type()
-        field_name = self.expect(Identifier_ruleset.IDENTIFIER)
+        field_name = self.parse_identifier()
         self.expect(Ponctuation_ruleset.SEMICOLON)
         return Field(field_name, field_type)
 
@@ -180,12 +180,12 @@ class Parser:
             return []
         params: list[Parameter] = []
         params_type = self.parse_type()
-        params_identifier = self.expect(Identifier_ruleset.IDENTIFIER)
+        params_identifier = self.parse_identifier()
         params.append(Parameter(params_identifier, params_type))
         while self.show_next().tag == Ponctuation_ruleset.COMMA:
             self.expect(Ponctuation_ruleset.COMMA)
             params_type = self.parse_type()
-            params_identifier = self.expect(Identifier_ruleset.IDENTIFIER)
+            params_identifier = self.parse_identifier()
             params.append(Parameter(params_identifier, params_type))
         return params
 
@@ -193,6 +193,6 @@ class Parser:
         # TODO: implement method body parsing for general cases
         # Here, it is only to work with the `class.dart` example file.
         self.expect(Keyword_ruleset.RETURN)
-        identifier = self.expect(Identifier_ruleset.IDENTIFIER)
+        identifier = self.parse_identifier()
         self.expect(Ponctuation_ruleset.SEMICOLON)
         return identifier.value

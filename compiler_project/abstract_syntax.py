@@ -1,7 +1,7 @@
 class AstNode:
     def accept(self, visitor, args=None):
         name = self.__class__.__name__
-        return getattr(visitor, "visit" + name)(self, args)
+        return getattr(visitor, "visit" + name)(self)
 
 
 # Pas obligé de redéfinir tout le langage Dart de base
@@ -12,33 +12,38 @@ class AstNode:
 # et les dépendances entre les éléments
 
 
+class Identifier(AstNode):
+    def __init__(self, value: str) -> None:
+        self.value: str = value
+
+
 class Class(AstNode):
-    def __init__(self, name, fields, methods):
-        self.name = name
-        self.fields = fields
-        self.methods = methods
+    def __init__(self, name: Identifier, fields, methods):
+        self.name: Identifier = name
+        self.fields: list[Field] = fields
+        self.methods: list[Method] = methods
 
 
 class Field(AstNode):
     def __init__(self, name, type):
-        self.name = name
-        self.type = type
+        self.name: Identifier = name
+        self.type: TypeNode = type
 
 
 class Method(AstNode):
-    def __init__(self, name, type, params, body):
-        self.name = name
-        self.type = type
-        self.params = params
+    def __init__(self, name: Identifier, type, params, body):
+        self.name: Identifier = name
+        self.type: TypeNode = type
+        self.params: list[Parameter] = params
         self.body = body
 
 
 class Parameter(AstNode):
     def __init__(self, name, type):
-        self.name = name
-        self.type = type
+        self.name: Identifier = name
+        self.type: TypeNode = type
 
 
 class TypeNode(AstNode):
-    def __init__(self, type) -> None:
-        self.type = type
+    def __init__(self, value) -> None:
+        self.value: str = value
