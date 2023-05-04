@@ -2,7 +2,7 @@
 
 import os
 import re
-from compiler_project.rules import LEXEM_RULES
+from compiler_project.rules import LEXEM_RULES, Cleaning_ruleset
 
 import logging
 
@@ -22,9 +22,9 @@ class Lexem:
     """
 
     def __init__(self, tag, value, position):
-        self.tag = tag
-        self.value = value
-        self.position = position
+        self.tag: str = tag
+        self.value: str = value
+        self.position: tuple[int, int] = position
 
     def __repr__(self):
         return f"{self.tag}({self.value})"
@@ -35,7 +35,7 @@ class Lexer:
         """
         Component in charge lexical analysis.
         """
-        self.lexems = []
+        self.lexems: list[Lexem] = []
         self.current_line_number = 0
         self.current_position = 0
 
@@ -85,11 +85,12 @@ class Lexer:
             # raise an error!
             if not match:
                 raise LexerException(
-                    "ERROR (lexer) at: " +
-                    f"({self.current_line_number},{self.current_position}):\n"
-                    + line.strip() + "\n"
+                    "ERROR (lexer) at: "
+                    + f"({self.current_line_number},{self.current_position}):\n"
+                    + line.strip()
+                    + "\n"
                     + " " * len(line[: self.current_position])
-                    + "^" * len(line[self.current_position - 1:])
+                    + "^" * len(line[self.current_position - 1 :])
                     + f"\nLexems: {self.lexems}"
                 )
 
@@ -106,7 +107,7 @@ class Lexer:
             data = match.group(0)
             # If the match was with a whitespace, its tag is None
             # and we do not need to keep it
-            if tag is not None:
+            if tag is not Cleaning_ruleset.WHITESPACE:
                 self.append_lexem(tag, data)
             self.current_position = match.end(0)
             return True
@@ -116,9 +117,9 @@ class Lexer:
         """
         Creates and adds a new lexem to the list
         """
-        lexem = Lexem(
-            tag, data, [self.current_line_number, self.current_position])
+        lexem = Lexem(tag, data, [self.current_line_number, self.current_position])
         self.lexems.append(lexem)
+
 
 if __name__ == "__main__":
     lexer = Lexer()
