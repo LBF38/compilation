@@ -1,8 +1,8 @@
 """Abstract syntax for the compiler.
-This file defines the classes for the abstract syntax tree for the mini-C. (learning purpose)
+This file defines the classes for the abstract syntax tree for the mini-C. 
+(learning purpose)
 """
 
-from abc import ABCMeta
 from typing import List
 
 

@@ -3,7 +3,8 @@
 
 import logging
 
-from compiler.abstract_syntax import (AstNode,Program,Declaration,Assignement,Body,Identifier,If,Else,While,Conjunction)
+from compiler.abstract_syntax import (
+    AstNode, Program, Declaration, Assignement, Body, Identifier, If, Else, While, Conjunction)
 
 logger = logging.getLogger(__name__)
 
@@ -148,7 +149,7 @@ class Parser:
             statement = self.parse_statement()
             body.statements.append(statement)
         self.expect("R_CURL_BRACKET")
-        else_= None
+        else_ = None
         if (self.show_next().tag == "KW_ELSE"):
             else_ = self.parse_else_statement()
         return If(condition, body, else_)
