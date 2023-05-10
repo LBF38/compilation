@@ -11,6 +11,7 @@ from compiler_project.abstract_syntax import (
     Identifier,
     Method,
     Parameter,
+    Program,
     TypeNode,
 )
 from compiler_project.lexer import Lexem
@@ -94,6 +95,8 @@ class Parser:
         try:
             self.remove_comments()
             code_graph = self.parse_code()
+            if code_graph is None:
+                raise ParsingException("ERROR: No code to parse, or parsing failed.")
         except ParsingException as err:
             logger.exception(err)
             raise err
@@ -103,14 +106,19 @@ class Parser:
         """
         Parses the code for visualizing the links between objects.
         """
-        if self.show_next().tag == Keyword_ruleset.CLASS:
-            return self.parse_class()
-        # elif(self.show_next().tag == "INTERFACE"):
-        #     return self.parse_interface()
-        elif self.show_next().tag == Keyword_ruleset.ABSTRACT:
-            return self.parse_abstract_class()
-        else:
-            raise ParsingException("ERROR: Expected class or interface")
+        code = Program([AstNode()])
+        while len(self.lexems) != 0 or self.show_next().tag in [
+            Keyword_ruleset.CLASS,
+            Keyword_ruleset.ABSTRACT,
+        ]:
+            if self.show_next().tag == Keyword_ruleset.CLASS:
+                code.classes.append(self.parse_class())
+            # elif(self.show_next().tag == "INTERFACE"):
+            #     return self.parse_interface()
+            elif self.show_next().tag == Keyword_ruleset.ABSTRACT:
+                code.classes.append(self.parse_abstract_class())
+            else:
+                raise ParsingException("ERROR: Expected class or interface")
 
     def parse_class(self):
         """

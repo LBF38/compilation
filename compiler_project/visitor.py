@@ -6,6 +6,7 @@ from compiler_project.abstract_syntax import (
     Identifier,
     Method,
     Parameter,
+    Program,
     TypeNode,
 )
 
@@ -16,6 +17,9 @@ class Visitor:
 
 
 class PrettyPrinter(Visitor):
+    def visitProgram(self, program: Program):
+        return f"{''.join([_class.accept(self) for _class in program.classes])}"
+
     def visitAbstract(self, _abstract: Abstract):
         return f"abstract {_abstract._class.accept(self)}"
 
@@ -54,6 +58,9 @@ class PrettyPrinter(Visitor):
 
 
 class CodeGraph(Visitor):
+    def visitProgram(self, program: Program):
+        return f"{''.join([_class.accept(self) for _class in program.classes])}"
+
     def visitAbstract(self, _abstract: Abstract):
         code = f"class {_abstract._class.name.accept(self)} {{\n"
         code += "\t<<abstract>>\n"

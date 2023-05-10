@@ -12,6 +12,11 @@ class AstNode:
 # et les dépendances entre les éléments
 
 
+class Program(AstNode):
+    def __init__(self, classes: list[AstNode]):
+        self.classes: list[Class | Abstract | AstNode] = classes
+
+
 class Identifier(AstNode):
     def __init__(self, value: str) -> None:
         self.value: str = value
