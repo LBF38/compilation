@@ -1,4 +1,4 @@
-from classes import *
+from classes import Voiture
 
 
 class Visiteur:
@@ -8,7 +8,7 @@ class Visiteur:
 
     def visitVoiture(self, voiture, args):
         print("Je suis une voiture")
-        self.visit(voiture.moteur,args)
+        self.visit(voiture.moteur, args)
         # voiture.moteur.accept(self, args)
         for roue in voiture.roues:
             # roue.accept(self, args)
