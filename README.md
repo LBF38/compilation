@@ -1,10 +1,13 @@
 # Cours de compilation
 
-Cours de compilation à l'ENSTA Bretagne.
+Cours de compilation @ ENSTA Bretagne.
 
 ## Liens vers les TPs
 
-- [TP1](TP1/README.md)
+- [TP1](TPs/TP1/README.md)
+- [TP2](TPs/TP2/)
+- [TP3](TPs/TP3/)
+- [TP4](TPs/TP4/README.md)
 
 ## Problèmes rencontrés
 
