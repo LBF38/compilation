@@ -71,7 +71,7 @@ python main.py <file> --output <output_file>
 ```
 
 > **Note**
-> Par défaut, le fichier de sortie est le nom du fichier d'entrée avec l'extension `.md`.
+> Par défaut, le fichier de sortie est `code_graph_output.md`.
 
 ---
 

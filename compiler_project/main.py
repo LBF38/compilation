@@ -22,6 +22,7 @@ if "-o" in sys.argv or "--output" in sys.argv:
     else:
         compiler.output_filename = sys.argv[sys.argv.index("--output") + 1]
         sys.argv.remove("--output")
+    sys.argv.remove(compiler.output_filename)
 
 if "-t" in sys.argv or "--token" in sys.argv:
     compiler.output_token = True
