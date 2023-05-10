@@ -120,7 +120,7 @@ Ainsi, j'ai décidé de reprendre les solutions réalisées en TDs afin de capit
 
 Plus je réfléchissais au projet compilation, plus je me suis dit que mon projet constituait principalement en la réalisation d'un visiteur qui génère le diagramme de classes à partir d'un AST. Ainsi, je pourrais utiliser la définition d'un langage déjà créé, comme le langage Dart, et me concentrer sur la génération du diagramme de classes en n'implémentant que la partie visiteur.
 
-Ainsi, j'ai entamé des recherches sur le langage ANTLR et ANTLR4 qui permettent de définir un langage et de générer un visiteur pour celui-ci. De plus, il suffit de récupérer la définition du langage Dart au format ANTLR (`.g`/`.g4`) et de générer les fichiers adéquats pour le compilateur. La partie la plus fastidieuse serait alors de redéfinir toutes les fonctions du visiteur pour correspondre à ce que je souhaite faire.
+Ainsi, j'ai entamé des recherches sur [le langage ANTLR et ANTLR4](https://www.antlr.org) qui permettent de définir un langage et de générer un visiteur pour celui-ci. De plus, il suffit de récupérer la définition du langage Dart au format ANTLR (`.g`/`.g4`) et de générer les fichiers adéquats pour le compilateur. La partie la plus fastidieuse serait alors de redéfinir toutes les fonctions du visiteur pour correspondre à ce que je souhaite faire.
 
 > **Warning**
 > Ce fichier est au format ANTLR3 et non ANTLR4 (`.g4`). Ainsi, il est nécessaire d'utiliser la version 3.* d'ANTLR pour générer les fichiers adéquats (Lexer, Parser, Visitor, ...).
