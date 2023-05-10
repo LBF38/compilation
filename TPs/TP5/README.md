@@ -8,6 +8,13 @@ Pour mettre en place cela, on peut créer par exemple un dictionnaire contenant 
 Chaque dictionnaire représente donc le contexte d'un bloc de code.
 S'il on veut vérifier la définition d'une variable ou son utilisation, il nous suffit de vérifier que la variable fait partie de l'un des dictionnaires accessibles à partir du contexte d'utilisation.
 
+**Notes :**
+
+- Visiteur :
+  - Quand on définit un visiteur, chaque méthode contient la logique de visite de l'élément correspondant.
+  - Penser que l'on peut créer autant de visiteurs que l'on souhaite.
+  - Penser également à séparer les responsabilités en créant, par exemple, une classe qui va gérer la mise en forme du code. (indentation, ajout de lignes, blocs, etc.)
+
 ## Question 7 - Définitions des règles du langage étudié
 
 Ces règles permettent de définir la syntaxe du langage et de rejeter ce que l'on ne souhaite pas.
