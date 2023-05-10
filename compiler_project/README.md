@@ -7,10 +7,10 @@ Il n'est pas nécessaire de vérifier que le code s'exécute correctement mais i
 <details>
 <summary><h2>Attendus du projet compilation</h2></summary>
 
-* [ ] Lexer
-* [ ] Parser
-* [ ] AST
-* [ ] Pretty Printer (w/ Visitor)
+* [x] Lexer
+* [x] Parser
+* [x] AST
+* [ ] Visitor Pattern (w/ Pretty Printer or at least one visitor)
 * [ ] Documentation
 
 </details>
@@ -42,9 +42,9 @@ Pour ce projet, l'objectif est de réaliser une version très simplifiée de l'e
 
 La version minimale du projet de compilation sera composée de 3 parties:
 
-* [ ] Lexer
-* [ ] Parser
-* [ ] Visitor (one or more)
+* [x] Lexer
+* [x] Parser
+* [x] Visitor (one or more)
 
 Il contient également la définition de l'arbre de syntaxe abstraite (AST) et d'une classe `Compiler` permettant de lancer et gérer la compilation.
 
@@ -78,6 +78,8 @@ python main.py <file> --output <output_file>
 ## Laboratoire
 
 Dans cette partie, je vais présenter rapidement les différents tests et explorations que j'ai réalisé au cours de ma découverte des compilateurs, du cours et de son implémentation.
+Les laboratoires suivants ont été réalisé dans d'autres dépôts que celui-ci. Ainsi, il risque de ne pas être disponible ou d'être supprimé à l'avenir.
+Ils seront peut-être ajoutés à ce dépôt à l'avenir.
 
 ### Ruby
 
@@ -96,14 +98,17 @@ Ainsi, j'ai décidé de reprendre les solutions réalisées en TDs afin de capit
 
 ### ANTLR/ANTLR4
 
-Plus je réfléchissais au projet compilation, plus je me suis dit que mon projet constituait principalement la réalisation d'un visiteur qui génère le diagramme de classes à partir d'un AST. Ainsi, je pourrais utiliser la définition d'un langage déjà créé, comme le langage Dart, et me concentrer sur la génération du diagramme de classes en n'implémentant que la partie visiteur.
+Plus je réfléchissais au projet compilation, plus je me suis dit que mon projet constituait principalement en la réalisation d'un visiteur qui génère le diagramme de classes à partir d'un AST. Ainsi, je pourrais utiliser la définition d'un langage déjà créé, comme le langage Dart, et me concentrer sur la génération du diagramme de classes en n'implémentant que la partie visiteur.
 
 Ainsi, j'ai entamé des recherches sur le langage ANTLR et ANTLR4 qui permettent de définir un langage et de générer un visiteur pour celui-ci. De plus, il suffit de récupérer la définition du langage Dart au format ANTLR (`.g`/`.g4`) et de générer les fichiers adéquats pour le compilateur. La partie la plus fastidieuse serait alors de redéfinir toutes les fonctions du visiteur pour correspondre à ce que je souhaite faire.
 
-Vous trouverez [ici](https://github.com/dart-lang/sdk/blob/master/tools/spec_parser/Dart.g) le fichier de définition du langage Dart au format ANTLR.
-
 > **Warning**
 > Ce fichier est au format ANTLR3 et non ANTLR4 (`.g4`). Ainsi, il est nécessaire d'utiliser la version 3.* d'ANTLR pour générer les fichiers adéquats (Lexer, Parser, Visitor, ...).
+
+Vous trouverez [ici](https://github.com/dart-lang/sdk/blob/master/tools/spec_parser/Dart.g) le fichier de définition du langage Dart au format ANTLR.
+
+> **Note**
+> ANTLR4 permet de générer le code vers plusieurs langages cibles, ce que ne permet pas ANTLR3. Ainsi, il est possible de générer le code vers Python, Java, C#, Go, JavaScript, Swift, Dart, C++, ... (avec ANTLR4).
 
 ## Conclusion
 

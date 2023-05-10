@@ -6,6 +6,12 @@ from compiler_project.visitor import CodeGraph, PrettyPrinter
 
 
 class Compiler:
+    def __init__(self):
+        self.ast = AstNode()
+        self.output_filename = "code_graph_output"
+        self.output_token = False
+        self.output_pretty = False
+
     def compile(self, filename) -> AstNode:
         """Compile the given file.
 
@@ -19,6 +25,16 @@ class Compiler:
         lexer.lex_file(filename)
         parser = Parser(lexer.lexems)
         self.ast = parser.parse()
+        self.code_graph_generated = self.ast.accept(CodeGraph())
+        with open(self.output_filename + ".md", "w") as f:
+            f.write(self.code_graph_generated)
+        if self.output_pretty:
+            pretty_code = self.ast.accept(PrettyPrinter())
+            with open(self.output_filename + "_pretty.dart", "w") as f:
+                f.write(pretty_code)
+        if self.output_token:
+            print("Tokens: \n")
+            print(lexer.lexems)
         return self.ast
 
 
