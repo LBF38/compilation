@@ -4,6 +4,7 @@
 import logging
 
 from compiler_project.abstract_syntax import (
+    Abstract,
     AstNode,
     Class,
     Field,
@@ -106,6 +107,8 @@ class Parser:
             return self.parse_class()
         # elif(self.show_next().tag == "INTERFACE"):
         #     return self.parse_interface()
+        elif self.show_next().tag == Keyword_ruleset.ABSTRACT:
+            return self.parse_abstract_class()
         else:
             raise ParsingException("ERROR: Expected class or interface")
 
@@ -155,9 +158,14 @@ class Parser:
         # parse parameters
         parameters = self.parse_parameters()
         self.expect(Ponctuation_ruleset.R_PAREN)
+        if self.show_next().tag == Ponctuation_ruleset.SEMICOLON:
+            self.expect(Ponctuation_ruleset.SEMICOLON)
+            return Method(method_name, method_type, parameters, None)
         self.expect(Ponctuation_ruleset.L_CURL_BRACKET)
         # parse method body
         method_body = self.parse_method_body()
+        if method_body == []:
+            method_body = None
         self.expect(Ponctuation_ruleset.R_CURL_BRACKET)
         return Method(method_name, method_type, parameters, method_body)
 
@@ -190,9 +198,12 @@ class Parser:
         return params
 
     def parse_method_body(self):
-        # TODO: implement method body parsing for general cases
-        # Here, it is only to work with the `class.dart` example file.
-        self.expect(Keyword_ruleset.RETURN)
-        identifier = self.parse_identifier()
-        self.expect(Ponctuation_ruleset.SEMICOLON)
-        return identifier.value
+        # We are only interested in the links between objects, not the code itself.
+        # Therefore, we skip the method body.
+        while self.show_next().tag != Ponctuation_ruleset.R_CURL_BRACKET:
+            self.accept()
+        return []
+
+    def parse_abstract_class(self):
+        self.expect(Keyword_ruleset.ABSTRACT)
+        return Abstract(self.parse_class())

@@ -1,4 +1,5 @@
 from compiler_project.abstract_syntax import (
+    Abstract,
     AstNode,
     Class,
     Field,
@@ -15,15 +16,18 @@ class Visitor:
 
 
 class PrettyPrinter(Visitor):
+    def visitAbstract(self, _abstract: Abstract):
+        return f"abstract {_abstract._class.accept(self)}"
+
     def visitClass(self, _class: Class):
-        generated_code = f"class {_class.name.accept(self)} {{\n"
-        generated_code += (
+        code = (
+            f"class {_class.name.accept(self)} {{\n"
             f"{''.join([field.accept(self) for field in _class.fields])}\n"
-        )
-        generated_code += (
             f"{''.join([method.accept(self) for method in _class.methods])}\n"
+            f"\t{_class.name.accept(self)}"
+            f"(this.{', this.'.join([param.name.accept(self) for param in _class.fields])});\n"
         )
-        return generated_code + "}\n"
+        return code + "}\n"
 
     def visitField(self, field: Field):
         return f"\t{field.type.accept(self)} {field.name.accept(self)};\n"
@@ -32,8 +36,11 @@ class PrettyPrinter(Visitor):
         code = (
             f"\t{method.type.accept(self)} {method.name.accept(self)}"
             + f"({', '.join([param.accept(self) for param in method.params])})"
-            + f" {{\n{method.body}\n\t}}\n"  # TODO: fix body class and visit it
+            + " {\n"
         )
+        if method.body is not None:
+            code += f"\t\t{method.body}\n"
+        code += "\n\t}\n"
         return code
 
     def visitParameter(self, param: Parameter):
@@ -47,6 +54,17 @@ class PrettyPrinter(Visitor):
 
 
 class CodeGraph(Visitor):
+    def visitAbstract(self, _abstract: Abstract):
+        code = f"class {_abstract._class.name.accept(self)} {{\n"
+        code += "\t<<abstract>>\n"
+        code += (
+            f"{''.join([field.accept(self) for field in _abstract._class.fields])}\n"
+        )
+        code += (
+            f"{''.join([method.accept(self) for method in _abstract._class.methods])}\n"
+        )
+        return code + "}\n"
+
     def visitClass(self, _class: Class):
         code = f"class {_class.name.accept(self)} {{\n"
         code += f"{''.join([field.accept(self) for field in _class.fields])}\n"
@@ -59,7 +77,7 @@ class CodeGraph(Visitor):
     def visitMethod(self, method: Method):
         return (
             f"\t+{method.name.accept(self)}"
-            + f"({', '.join([param.accept(self) for param in method.params])}) : "
+            + f"({', '.join([param.accept(self) for param in method.params])}) "
             + f"{method.type.accept(self)}\n"
         )
 

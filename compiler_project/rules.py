@@ -30,6 +30,7 @@ class Type_ruleset:
     BOOL = "TYPE_BOOL"
     STRING = "TYPE_STRING"
     LIST = "TYPE_LIST"
+    VOID = Keyword_ruleset.VOID
 
 
 class Operator_ruleset:

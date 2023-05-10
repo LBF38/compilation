@@ -24,6 +24,11 @@ class Class(AstNode):
         self.methods: list[Method] = methods
 
 
+class Abstract(AstNode):
+    def __init__(self, _class: Class):
+        self._class = _class
+
+
 class Field(AstNode):
     def __init__(self, name, type):
         self.name: Identifier = name

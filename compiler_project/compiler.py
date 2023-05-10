@@ -11,6 +11,7 @@ class Compiler:
         self.output_filename = "code_graph_output"
         self.output_token = False
         self.output_pretty = False
+        self.code_graph_generated = "```mermaid\nclassDiagram\n"
 
     def compile(self, filename) -> AstNode:
         """Compile the given file.
@@ -25,7 +26,7 @@ class Compiler:
         lexer.lex_file(filename)
         parser = Parser(lexer.lexems)
         self.ast = parser.parse()
-        self.code_graph_generated = self.ast.accept(CodeGraph())
+        self.code_graph_generated += self.ast.accept(CodeGraph()) + "\n```"
         with open(self.output_filename + ".md", "w") as f:
             f.write(self.code_graph_generated)
         if self.output_pretty:
