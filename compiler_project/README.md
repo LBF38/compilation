@@ -10,8 +10,8 @@ Il n'est pas nécessaire de vérifier que le code s'exécute correctement mais i
 * [x] Lexer
 * [x] Parser
 * [x] AST
-* [ ] Visitor Pattern (w/ Pretty Printer or at least one visitor)
-* [ ] Documentation
+* [x] Visitor Pattern (w/ Pretty Printer or at least one visitor)
+* [x] Documentation
 
 </details>
 
