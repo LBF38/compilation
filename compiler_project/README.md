@@ -73,6 +73,26 @@ python main.py <file> --output <output_file>
 > **Note**
 > Par défaut, le fichier de sortie est `code_graph_output.md`.
 
+## Exemple
+
+Voici quelques exemples d'utilisation du compilateur:
+
+> **Warning**
+> Penser à bien vous placer dans le dossier `compiler_project` avant de lancer les commandes suivantes.
+> Vous pouvez le faire avec la commande `cd compiler_project`.
+
+```bash
+python main.py ./fixtures/abstract_class.dart
+python main.py ./fixtures/class.dart
+```
+
+On peut également passer des options au cli:
+
+```bash
+python main.py ./fixtures/class.dart -t --pretty
+python main.py --output class_output ./fixtures/class.dart
+```
+
 ---
 
 ## Laboratoire
